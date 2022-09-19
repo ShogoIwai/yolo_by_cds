@@ -12,4 +12,4 @@ python ../common/replace/replace.py --file ./YOLOv4-pytorch/config/yolov4_config
 python ../common/replace/replace.py --file ./YOLOv4-pytorch/config/yolov4_config.py --pre "\"CLASSES\": \[\"unknown\", \"person\", \"car\"\]" --post "\"CLASSES\": [\"cat\", \"dog\"]"
 
 python ./training1.py --gpu_id 0
-python ./inference1.py --weight_path ./ backup_epoch119.pt --gpu_id 0
+python ./inference1.py --weight_path ./backup_epoch119.pt --gpu_id 0
