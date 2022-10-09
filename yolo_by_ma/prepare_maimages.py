@@ -89,7 +89,7 @@ if __name__ == '__main__':
         else:
             names = ['cat', 'dog']
 
-        exe = 'python ~/rep/yolo_by_ods/common/gid/gid.py'
+        exe = 'python ~/rep/yolo_by_cds/common/gid/gid.py'
         KeywordAry = convert_darknettxt_dataset.csvread('kwd.txt')
         names = list(dict.fromkeys(names))
         names.sort()
