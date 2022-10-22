@@ -43,14 +43,14 @@ def run_sync(mode):
 def do_mount(dir):
     result = chk_mntc_dir(dir)
     if (result):
-        print(f"sudo mount {result}")
-        os.system(f"sudo mount {result}")
+        print(f"mount {result}")
+        os.system(f"mount {result}")
 
 def do_umount(dir):
     result = chk_mntc_dir(dir)
     if (result):
-        print(f"sudo umount {result}")
-        os.system(f"sudo umount {result}")
+        print(f"umount {result}")
+        os.system(f"umount {result}")
 
 def chk_mntc_dir(dir):
     match = re.search(r'^\/mnt\/\w+', dir)

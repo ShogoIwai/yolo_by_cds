@@ -10,6 +10,18 @@ my @src = ();
 my @src_files = ();
 my $delta_days_thresh = 100;
 
+sub getUser() {
+    my $user_name = `whoami`;
+    chomp $user_name;
+    return $user_name;
+}
+
+sub isUser() {
+    my $check_name = shift;
+    my $user_name = &getUser();
+    return ($check_name eq $user_name) ? 1 : 0;
+}
+
 sub push_to_src() {
     my $item = shift;
     push(@src, $item);
@@ -83,7 +95,8 @@ sub arch_src_to_arg() {
     my $date = $dt->ymd;
     $date =~ s/^\d\d//;
     $date =~ s/-//g;
-    my $dst_file = $dst_dir . '/bak_' . $date . '.rar';
+    my $user_name = &getUser();
+    my $dst_file = $dst_dir . "/bak_${user_name}_${date}.rar";
     $dst_file = &add_dq($dst_file);
 
     File::Find::find(\&chk_del, $dst_dir);
@@ -95,7 +108,8 @@ sub arch_src_to_arg() {
 }
 
 sub chk_del() {
-    if (/^bak_(\d\d)(\d\d)(\d\d).*\.rar$/) {
+    my $user_name = &getUser();
+    if (/^bak_${user_name}_(\d\d)(\d\d)(\d\d).*\.rar$/) {
         my $dt1 = DateTime->new(year => int("20" . $1), month => int($2), day => int($3));
         my $dt2 = DateTime->today;
         my $delta = $dt2->delta_days($dt1);
@@ -119,8 +133,8 @@ sub do_mount() {
     my $dir = shift;
     my $result = chk_mntc_dir($dir);
     if ($result) {
-        print "sudo mount $result\n";
-        system "sudo mount $result";
+        print "mount $result\n";
+        system "mount $result";
     }
 }
 
@@ -128,8 +142,8 @@ sub do_umount() {
     my $dir = shift;
     my $result = chk_mntc_dir($dir);
     if ($result) {
-        print "sudo umount $result\n";
-        system "sudo umount $result";
+        print "umount $result\n";
+        system "umount $result";
     }
 }
 
