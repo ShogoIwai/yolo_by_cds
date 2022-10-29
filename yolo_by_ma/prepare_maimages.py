@@ -111,12 +111,13 @@ if __name__ == '__main__':
     if (opts.get('conv')):
         rmminimg.rm_min_img(imgsubdir)
         rmminimg.cp_img(imgsubdir)
+        rmminimg.drop_empty_folders(imgsubdir)
+        rmminimg.drop_empty_folders(imgsubdir)
+        
         inference.main(imgsubdir, opts.get('gentxt'))
-        rmminimg.drop_empty_folders(imgsubdir)
-        rmminimg.drop_empty_folders(imgsubdir)
 
-        # dif(imgsubdir, delete=True)
         df.img(imgsubdir)
         df.prt()
         df.mvp()
         df.clr()
+        # dif(imgsubdir, delete=True)
