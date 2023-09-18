@@ -1,4 +1,4 @@
-# clone of https://github.com/Joeclinton1/google-images-download
+# clone of https://github.com/kevintanu/google-images-download
 
 ###### Searching and Downloading Google Images to the local disk ######
 
@@ -400,9 +400,9 @@ class googleimagesdownload:
     def format_object(self, object):
         data = object[1]
         main = data[3]
-        info = data[9]
+        info = data[25]
         if info is None:
-            info = data[11]
+            info = data[25]
         formatted_object = {}
         try:
             formatted_object['image_height'] = main[2]
