@@ -55,25 +55,13 @@ if __name__ == '__main__':
                 for i in range(page_size):
                     try:
                         idx = str(start_num + i)
-                        urlName = f"{urlSite}/{idx}/"
+                        urlName = f"{urlSite}/page/{idx}/"
                         print(f"loading : {urlName} ...")
                         url = requests.get(urlName)
                         soup = BeautifulSoup(url.content, 'html.parser')
 
-                        if (re.search(r'top-rated', urlSite)):
-                            uls = soup.find_all('ul', class_='gallery-a a d')
-                            if (not len(uls)): raise Exception
-                            for ul in uls:
-                                lis = ul.find_all('li')
-                                if (not len(lis)): raise Exception
-                                for li in lis:
-                                    spans = li.find_all('span')
-                                    if (not len(spans)): raise Exception
-                                    name = spans[0].text
-                                    # print(name)
-                                    names.append(name)
-                        if (re.search(r'latest-updates', urlSite)):
-                            uls = soup.find_all('ul', class_='gallery-a e')
+                        if (re.search(r'models', urlSite)):
+                            uls = soup.find_all('ul', class_='list-gallery v1')
                             if (not len(uls)): raise Exception
                             for ul in uls:
                                 lis = ul.find_all('li')
@@ -111,12 +99,13 @@ if __name__ == '__main__':
     if (opts.get('conv')):
         rmminimg.rm_min_img(imgsubdir)
         rmminimg.cp_img(imgsubdir)
+        rmminimg.drop_empty_folders(imgsubdir)
+        rmminimg.drop_empty_folders(imgsubdir)
+        
         inference.main(imgsubdir, opts.get('gentxt'))
-        rmminimg.drop_empty_folders(imgsubdir)
-        rmminimg.drop_empty_folders(imgsubdir)
 
-        # dif(imgsubdir, delete=True)
         df.img(imgsubdir)
         df.prt()
         df.mvp()
         df.clr()
+        # dif(imgsubdir, delete=True)
