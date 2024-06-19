@@ -46,11 +46,11 @@ sub main() {
 }
 
 sub replace() {
-    my $file = $File::Find::name;
-    my $temp_file = "$file.tmp";
+    my $file_path = $File::Find::name;
+    my $temp_file = "$file_path.tmp";
     my $match = 0;
-    if ($file =~ /$m_fmatch/) {
-        open (INFILE, "<$file") or die "$file: $!";
+    if ($file_path =~ /$m_fmatch/) {
+        open (INFILE, "<$file_path") or die "$file_path: $!";
         open (OUTFILE, ">$temp_file") or die "$temp_file: $!";
         while (<INFILE>) {
             if (/$m_pre/) { $match = 1; }
@@ -60,7 +60,7 @@ sub replace() {
         close (OUTFILE);
         close (INFILE);
         if ($match) {
-            overwriteFile($file, $temp_file);
+            overwriteFile($file_path, $temp_file);
         }
         else {
             unlink($temp_file);
@@ -69,11 +69,11 @@ sub replace() {
 }
 
 sub overwriteFile() {
-    my $file = shift;
+    my $file_path = shift;
     my $temp_file = shift;
 
-    my $mode = (stat($file))[2] & 07777;
+    my $mode = (stat($file_path))[2] & 07777;
     chmod $mode, $temp_file or die "Cannot chmod $temp_file: $!";
 
-    File::Copy::move($temp_file, $file) or die "Cannot move $temp_file to $file: $!";
+    File::Copy::move($temp_file, $file_path) or die "Cannot move $temp_file to $file_path: $!";
 }
