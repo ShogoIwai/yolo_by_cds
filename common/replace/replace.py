@@ -16,25 +16,22 @@ def parseOptions():
     if args.post: opts.update({'post':args.post})
 
 def replace():
-    infile = opts['file']
+    file = opts['file']
+    temp_file = opts['file'] + '.tmp'
     match = 0
-    with open(infile, 'r') as file:
+    ofs = open(temp_file, mode='w')
+    with open(file, 'r') as file:
+        pattern = '.*' + opts['pre'] + '.*'
         for line in file:
-            pattern = '.*' + opts['pre'] + '.*'
-            match = re.match(pattern, line)
-            if (match):
-                break
-
+            if (re.match(pattern, line)): match = 1
+            line = re.sub(opts['pre'], opts['post'], line)
+            ofs.write(line)
+    ofs.close()
     if (match):
-        outfile = opts['file'] + '.tmp'
-        ofs = open(outfile, mode='w')
-        with open(infile, 'r') as file:
-            for line in file:
-                line = re.sub(opts['pre'], opts['post'], line)
-                ofs.write(line)
-        ofs.close()
-        shutil.copymode(infile, outfile)
-        shutil.move(outfile, infile)
+        shutil.copymode(file, temp_file)
+        shutil.move(temp_file, file)
+    else:
+        shutil.rmtree(temp_file)
 
 if __name__ == '__main__':
     parseOptions()
