@@ -1,5 +1,6 @@
 use strict;
 use warnings;
+use Cwd;
 use File::Find;
 use File::Basename;
 use DateTime;
@@ -69,6 +70,7 @@ sub copy_src_to_arg() {
         $dst_file = add_dq($dst_file);
 
         print "src_file=$src_file, dst_file=$dst_file\n";
+        if (! -e $dst_file ) { Cwd::realpath($dst_file); }
         system "cp $src_file $dst_file";
     }
 
