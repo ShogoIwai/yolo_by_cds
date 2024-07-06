@@ -1,8 +1,8 @@
 use strict;
 use warnings;
-use Cwd;
 use File::Find;
 use File::Basename;
+use File::Path;
 use DateTime;
 
 package backup;
@@ -66,11 +66,19 @@ sub copy_src_to_arg() {
         else {
             $dst_file = "$dst_base/$dir_tbl{$dir_name1}/$dir_name2/$dir_name2($year)/$file_name";
         }
-        if (-f $dst_file) { print "$dst_file is exists, so file copy is skipped.\n"; next; }
-        $dst_file = add_dq($dst_file);
+        if (-f $dst_file) {
+            print "$dst_file is exists, so file copy is skipped.\n";
+            next;
+        }
 
+        my $dst_path = File::Basename::dirname $dst_file;
+        if (! -d $dst_path) {
+            print "directry making... dst_path=$dst_path\n";
+            File::Path::mkpath $dst_path;
+        }
+
+        $dst_file = add_dq($dst_file);
         print "src_file=$src_file, dst_file=$dst_file\n";
-        if (! -e $dst_file ) { Cwd::realpath($dst_file); }
         system "cp $src_file $dst_file";
     }
 
