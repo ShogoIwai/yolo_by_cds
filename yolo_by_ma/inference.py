@@ -4,10 +4,10 @@ import sys
 import glob
 import re
 
-sys.path.append(os.path.abspath('./pytorch_yolov3'))
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), './pytorch_yolov3'))
 import detect_image
 
-sys.path.append(os.path.abspath('../common'))
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '../common'))
 from cdd import convert_darknettxt_dataset
 
 global opts
