@@ -20,20 +20,21 @@ def replace():
     file_path = os.path.abspath(opts['file'])
     temp_file = file_path + '.tmp'
     match = 0
-    ofs = open(temp_file, mode='w')
-    with open(file_path, 'r') as file:
+    ofs = open(temp_file, mode='w', encoding='utf-8')
+    with open(file_path, 'r', encoding='utf-8', errors='ignore') as file:
         pattern = '.*' + opts['pre'] + '.*'
         for line in file:
-            if (re.match(pattern, line)): match = 1
+            if re.match(pattern, line):
+                match = 1
             line = re.sub(opts['pre'], opts['post'], line)
             ofs.write(line)
     ofs.close()
-    if (match):
+    if match:
         shutil.copymode(file_path, temp_file)
         shutil.move(temp_file, file_path)
     else:
         os.remove(temp_file)
-
+    
 if __name__ == '__main__':
     parseOptions()
     if (opts.get('file') and opts.get('pre') and opts.get('post')):
