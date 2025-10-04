@@ -161,7 +161,7 @@ def _add_to_database(file_, hash_, file_size, image_size, capture_time, db):
 
 
 def _in_database(file, db):
-    return db.count({"_id": file}) > 0
+    return db.count_documents({"_id": file}) > 0
 
 
 def new_image_files(files, db):
@@ -202,7 +202,7 @@ def clear(db):
 
 
 def show(db):
-    total = db.count()
+    total = db.count_documents({})  # 修正: 空の辞書を渡す
     pprint(list(db.find()))
     print("Total: {}".format(total))
 
@@ -246,11 +246,12 @@ def find(db, match_time=False):
     return list(dups)
 
 
-def delete_duplicates(duplicates, db):
-    results = [delete_picture(x['file_name'], db)
+def delete_duplicates(duplicates, db, trash="./Trash/"):  # 修正: trashパラメータ追加
+    results = [delete_picture(x['file_name'], db, trash)
                for dup in duplicates for x in dup['items'][1:]]
-    cprint("Deleted {}/{} files".format(results.count(True),
-                                        len(results)), 'yellow')
+    # 修正: resultsはbool値のリストなので、Trueの数をカウント
+    success_count = sum(results)
+    cprint("Deleted {}/{} files".format(success_count, len(results)), 'yellow')
 
 
 def delete_picture(file_name, db, trash="./Trash/"):
@@ -359,9 +360,9 @@ if __name__ == '__main__':
             dups = find(db, args['--match-time'])
 
             if args['--delete']:
-                delete_duplicates(dups, db)
+                delete_duplicates(dups, db, TRASH)  # 修正: TRASHを渡す
             elif args['--print']:
                 pprint(dups)
                 print("Number of duplicates: {}".format(len(dups)))
             else:
-                display_duplicates(dups, db=db)
+                display_duplicates(dups, db=db, trash=TRASH)  # 修正: TRASHを渡す

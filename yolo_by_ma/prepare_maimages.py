@@ -5,13 +5,12 @@ import sys
 import re
 import requests
 from bs4 import BeautifulSoup
-import glob
+from difPy import dif
 
 sys.path.append(os.path.abspath('../common'))
 from cdd import convert_darknettxt_dataset
+from df import df
 from rmminimg import rmminimg
-from difPy import dif
-from df  import df
 
 import inference
 

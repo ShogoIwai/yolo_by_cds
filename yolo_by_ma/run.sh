@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # git clone https://github.com/nekobean/pytorch_yolov3
 
-# python ./prepare_maimages.py --dwn
+python ./prepare_maimages.py --dwn
 pushd images; bash ./down.sh; popd
 python ./prepare_maimages.py --conv
 rm -fr ./Trash
