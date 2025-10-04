@@ -7,7 +7,11 @@ import re
 import shutil
 from PIL import Image
 import csv
-from sklearn.model_selection import train_test_split
+from typing import Iterable, List, Sequence, Tuple, TypeVar, Optional
+import random
+import math
+
+T = TypeVar("T")
 
 global labels
 labels = []
@@ -162,8 +166,57 @@ def load_dataset(dataset_dir, label_file):
 
     return samples
 
+def _compute_n_test(n: int, test_size: int | float) -> int:
+    if isinstance(test_size, int):
+        if not (0 <= test_size <= n):
+            raise ValueError(f"整数の test_size は 0～{n} の範囲で指定してください")
+        n_test = test_size
+    else:
+        # sklearn に倣い、ceil でなく floor/round では分布が変わるので、慣例的に ceil を採用
+        n_test = int(math.ceil(n * test_size))
+    # すべてテストになるのを防ぎたければここでケア（sklearn は許容）
+    if n_test > n:
+        n_test = n
+    return n_test
+
+# === メインでコールされる関数群（サブ関数含む） ===
+def train_test_split_compat(
+    samples: Sequence[T],
+    test_size: int | float,
+    random_state: Optional[int] = None,
+    shuffle: bool = True,
+) -> Tuple[List[T], List[T]]:
+    """
+    sklearn.model_selection.train_test_split の最小互換:
+        - 単一配列 samples を train/test に分割して返す
+        - test_size は float (0<ts<1) または int (1<=ts<=len(samples))
+        - random_state により決定的シャッフル
+        - stratify, multiple arrays, train_size, etc. は未実装（必要最小限）
+
+    返値: (train_samples, test_samples)
+    """
+    if not isinstance(samples, Sequence):
+        raise TypeError("samples はシーケンスである必要があります")
+
+    n = len(samples)
+    if n == 0:
+        return [], []
+
+    n_test = _compute_n_test(n, test_size)
+
+    # インデックスをシャッフルしてからスライス
+    indices = list(range(n))
+    if shuffle:
+        rng = random.Random(random_state)
+        rng.shuffle(indices)
+
+    test_indices = set(indices[:n_test])
+    test = [samples[i] for i in range(n) if i in test_indices]
+    train = [samples[i] for i in range(n) if i not in test_indices]
+    return train, test
+
 def output_dataset(output_dir, samples, test_size):
-    train_samples, test_samples = train_test_split(samples, test_size=test_size, random_state=42)
+    train_samples, test_samples = train_test_split_compat(samples, test_size=test_size, random_state=42)
 
     # for pytorch_yolov3
     with open(output_dir / "train.txt", "w") as f:
