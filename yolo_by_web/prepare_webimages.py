@@ -81,13 +81,15 @@ class PrepareWebImages:
     # === サブ関数群 ===
     def load_names(self):
         if os.path.isfile('names.txt'):
-            return self.cdd.csvread('names.txt')
+            raw_names = self.cdd.csvread('names.txt')
+            return [' '.join(row) for row in raw_names]
         else:
             return ['cat', 'dog']
 
     def load_keywords(self):
         if os.path.isfile('kwd.txt'):
-            return self.cdd.csvread('kwd.txt')
+            raw_names = self.cdd.csvread('kwd.txt')
+            return [' '.join(row) for row in raw_names]
         else:
             return ['black', 'small']
 
