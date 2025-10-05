@@ -1,46 +1,64 @@
+#!/usr/bin/env python3
+
 from argparse import ArgumentParser
 import os
 
-global opts
-opts = {}
+class DuplicateFinder:
+    def __init__(self):
+        self.img_dir = None
+        self.prt_flag = None
+        self.mvp_flag = None
+        self.shw_flag = None
+        self.clr_flag = None
+        
+        fp = os.path.dirname(os.path.abspath(__file__))
+        self.dfp = f"python {fp}/duplicate_finder.py"
+        self.db = f"~/.dfdb"
 
-def parseOptions():
-    argparser = ArgumentParser()
-    argparser.add_argument('--img', help=':specify picture directry to database') # use action='store_true' as flag
-    argparser.add_argument('--prt', help=':only print duplicate pictures', action='store_true') # use action='store_true' as flag
-    argparser.add_argument('--mvp', help=':move all found duplicate pictures to the trash', action='store_true') # use action='store_true' as flag
-    argparser.add_argument('--shw', help=':show database', action='store_true') # use action='store_true' as flag
-    argparser.add_argument('--clr', help=':clear database', action='store_true') # use action='store_true' as flag
-    args = argparser.parse_args()
-    if args.img: opts.update({'img':args.img})
-    if args.prt: opts.update({'prt':args.prt})
-    if args.mvp: opts.update({'mvp':args.mvp})
-    if args.shw: opts.update({'shw':args.shw})
-    if args.clr: opts.update({'clr':args.clr})
+    def parse_options(self):
+        parser = ArgumentParser(description="Duplicate image finder processor")
+        parser.add_argument('--img', type=str, help='specify picture directory to database')
+        parser.add_argument('--prt', help='only print duplicate pictures', action='store_true')
+        parser.add_argument('--mvp', help='move all found duplicate pictures to the trash', action='store_true')
+        parser.add_argument('--shw', help='show database', action='store_true')
+        parser.add_argument('--clr', help='clear database', action='store_true')
 
-fp = os.path.dirname(os.path.abspath(__file__))
-dfp = f"python {fp}/duplicate_finder.py"
-db = f"~/.dfdb"
+        args = parser.parse_args()
+        self.img_dir = args.img
+        self.prt_flag = args.prt
+        self.mvp_flag = args.mvp
+        self.shw_flag = args.shw
+        self.clr_flag = args.clr
 
-def img(dir):
-    os.system(f"{dfp} add {dir} --db {db}")
+    def main(self):
+        if self.img_dir:
+            self.img(self.img_dir)
+        if self.prt_flag:
+            self.prt()
+        if self.mvp_flag:
+            self.mvp()
+        if self.shw_flag:
+            self.shw()
+        if self.clr_flag:
+            self.clr()
 
-def prt():
-    os.system(f"{dfp} find --print --db {db}")
+    # === メインでコールされる関数群 ===
+    def img(self, dir_path):
+        os.system(f"{self.dfp} add {dir_path} --db {self.db}")
 
-def mvp():
-    os.system(f"{dfp} find --delete --db {db}")
+    def prt(self):
+        os.system(f"{self.dfp} find --print --db {self.db}")
 
-def shw():
-    os.system(f"{dfp} show --db {db}")
+    def mvp(self):
+        os.system(f"{self.dfp} find --delete --db {self.db}")
 
-def clr():
-    os.system(f"{dfp} clear --db {db}")
+    def shw(self):
+        os.system(f"{self.dfp} show --db {self.db}")
+
+    def clr(self):
+        os.system(f"{self.dfp} clear --db {self.db}")
 
 if __name__ == '__main__':
-    parseOptions()
-    if (opts.get('img')): img(opts['img'])
-    if (opts.get('prt')): prt()
-    if (opts.get('mvp')): mvp()
-    if (opts.get('shw')): shw()
-    if (opts.get('clr')): clr()
+    processor = DuplicateFinder()
+    processor.parse_options()
+    processor.main()

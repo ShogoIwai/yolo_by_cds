@@ -14,7 +14,7 @@ from PIL import Image
 
 T = TypeVar("T")
 
-class Processor:
+class ConvertDarknetDataset:
     def __init__(self):
         self.input_dir = None
         self.label_file = None
@@ -258,6 +258,6 @@ class Processor:
         return [self.round0max(center_x, 1), self.round0max(center_y, 1), self.round0max(w, 1), self.round0max(h, 1)]
 
 if __name__ == '__main__':
-    processor = Processor()
+    processor = ConvertDarknetDataset()
     processor.parse_options()
     processor.main()
