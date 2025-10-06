@@ -1,0 +1,15 @@
+diff --git a/yolov3/utils/vis_utils.py b/yolov3/utils/vis_utils.py
+index 2805a02..14aec69 100644
+--- a/yolov3/utils/vis_utils.py
++++ b/yolov3/utils/vis_utils.py
+@@ -41,7 +41,9 @@ def draw_boxes(img, boxes, n_classes):
+         draw.rectangle((x1, y1, x2, y2), outline=color, width=3)
+ 
+         # ラベルを描画する。
+-        text_size = draw.textsize(caption, font=font)
++        # text_size = draw.textsize(caption, font=font)
++        bbox = draw.textbbox((0, 0), caption, font=font)
++        text_size = (bbox[2] - bbox[0], bbox[3] - bbox[1])
+         text_origin = np.array([x1, y1])
+         text_color = get_text_color(color)
+ 
