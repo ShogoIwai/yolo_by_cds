@@ -12,6 +12,7 @@ Each subproject provides a run.sh to execute the entire flow end-to-end.
 
 ## Repository Layout
 
+```
 yolo_by_cds/
 ├─ yolo_by_kaggle/        # Train/evaluate using an annotated Kaggle dataset
 │  └─ run.sh              # One-shot script: setup → download → train → evaluate → export
@@ -20,6 +21,7 @@ yolo_by_cds/
 │  └─ run.sh              # One-shot script: setup → infer → generate labels → (optionally) retrain
 │
 └─ README.md              # You are here
+```
 
 ## Key Components
 
