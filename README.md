@@ -1,4 +1,4 @@
-yolo_by_cds — End-to-End Object Detection (YOLOv3, PyTorch)
+## yolo_by_cds — End-to-End Object Detection (YOLOv3, PyTorch)
 
 yolo_by_cds is a compact, reproducible pipeline for object detection using the YOLO family (YOLOv3, PyTorch).
 It supports two practical workflows:
@@ -10,7 +10,8 @@ yolo_by_web/ — Use weights you trained to auto-annotate new images (pseudo-lab
 Annotation is done with Yolo_Label, and both training and inference rely on a PyTorch YOLOv3 implementation.
 Each subproject provides a run.sh to execute the entire flow end-to-end.
 
-Repository Layout
+## Repository Layout
+
 yolo_by_cds/
 ├─ yolo_by_kaggle/        # Train/evaluate using an annotated Kaggle dataset
 │  └─ run.sh              # One-shot script: setup → download → train → evaluate → export
@@ -20,7 +21,7 @@ yolo_by_cds/
 │
 └─ README.md              # You are here
 
-Key Components
+## Key Components
 
 Annotation: [Yolo_Label] — Create/edit bounding boxes and export in YOLO txt format.
 
